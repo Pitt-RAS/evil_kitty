@@ -1,6 +1,9 @@
 import cv2
 import sys
 import numpy as np
+import time
+
+DELAY = 1
 
 WIDTH = 640
 HEIGHT = 480
@@ -69,6 +72,7 @@ def draw_angry_eyes(frame):
 
 # capture and process camera data to find faces
 # and decide which eyes to show
+last_face = time.time()
 while True:
     # Capture frame-by-frame
     ret, frame = video_capture.read()
@@ -82,8 +86,11 @@ while True:
         minSize=(30, 30),
         flags=cv2.cv.CV_HAAR_SCALE_IMAGE
     )
-
+    current_time = time.time()
     if len(faces) > 0:
+        last_face = time.time()
+
+    if current_time - last_face < 2:
         draw_happy_eyes(eyes)
     else:
         draw_angry_eyes(eyes)
